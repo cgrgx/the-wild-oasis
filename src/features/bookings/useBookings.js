@@ -20,13 +20,15 @@ export function useBookings() {
   // ];
 
   // SORT
-  const sortBy = searchParams.get("sortBy");
+  const sortByRaw = searchParams.get("sortBy") || "startDate-desc";
+  const [field, direction] = sortByRaw.split("-");
+  const sortBy = { field, direction };
   const {
     isLoading,
     data: bookings,
     error,
   } = useQuery({
-    queryKey: ["bookings", { filters, sortBy }],
+    queryKey: ["bookings", filters, sortBy],
     queryFn: () => getBookings({ filters, sortBy }),
   });
 
