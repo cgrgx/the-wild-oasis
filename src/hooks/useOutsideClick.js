@@ -4,21 +4,21 @@ export function useOutsideClick(handler, listenCapturing = true) {
   const ref = useRef();
 
   useEffect(() => {
-    const handleEscape = (event) => {
-      if (event.key === "Escape") {
-        handler();
-      }
-    };
     function handleClick(event) {
       if (ref.current && !ref.current.contains(event.target)) {
         handler();
       }
     }
-    document.addEventListener("click", handleClick, true);
-    document.addEventListener("keydown", handleEscape);
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        handler();
+      }
+    };
+    document.addEventListener("click", handleClick, listenCapturing);
+    document.addEventListener("keydown", handleEscape, listenCapturing);
     return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.removeEventListener("click", handleClick, true);
+      document.removeEventListener("click", handleClick, listenCapturing);
+      document.removeEventListener("keydown", handleEscape, listenCapturing);
     };
   }, [handler, listenCapturing]);
 
